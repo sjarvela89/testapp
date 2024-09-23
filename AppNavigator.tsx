@@ -28,7 +28,7 @@ const AppNavigator = () => {
                 <Stack.Screen name="Author" component={AuthorScreen} options={{headerShown: false}}/>
                 <Stack.Screen name="Dog" component={DogScreen} options={{headerShown: false}}/>
                 <Stack.Screen name="Photography" component={PhotographyScreen} options={{headerShown: false}}/>
-                <Stack.Screen name="Guitar" component={GuitarScreen} />
+                <Stack.Screen name="Guitar" component={GuitarScreen} options={{headerShown: false}}/>
             </Stack.Navigator>
         </NavigationContainer>
     </SafeAreaView>

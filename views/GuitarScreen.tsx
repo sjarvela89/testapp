@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
-import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
+import { View, Text, StyleSheet, TouchableOpacity, ImageBackground } from 'react-native';
 import Sound from 'react-native-sound';
+import BackgroundImage from '../resources/background.jpg';
 
 // Preload guitar sound files
 const sounds = {
@@ -36,13 +37,15 @@ const GuitarScreen: React.FC = () => {
 
   return (
     <View style={styles.container}>
-      <Text style={styles.title}>Guitar Soundboard</Text>
-      <TouchableOpacity style={styles.button} onPress={() => playSound(sounds.guitar1)}>
-        <Text style={styles.buttonText}>Play Guitar Solo</Text>
-      </TouchableOpacity>
-      <TouchableOpacity style={[styles.button, styles.stopButton]} onPress={stopSound}>
-        <Text style={styles.buttonText}>Stop Playing</Text>
-      </TouchableOpacity>
+      <ImageBackground source={BackgroundImage} style={styles.backgroundImage} resizeMode="cover">
+        <Text style={styles.title}>Guitar Soundboard</Text>
+        <TouchableOpacity style={styles.button} onPress={() => playSound(sounds.guitar1)}>
+          <Text style={styles.buttonText}>Play Guitar Solo</Text>
+        </TouchableOpacity>
+        <TouchableOpacity style={[styles.button, styles.stopButton]} onPress={stopSound}>
+          <Text style={styles.buttonText}>Stop Playing</Text>
+        </TouchableOpacity>
+      </ImageBackground>
     </View>
   );
 };
@@ -50,9 +53,11 @@ const GuitarScreen: React.FC = () => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+  },
+  backgroundImage: {
+    flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
-    backgroundColor: '#f5f5f5',
   },
   title: {
     fontSize: 24,
