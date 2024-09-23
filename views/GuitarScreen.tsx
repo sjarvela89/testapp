@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { View, Text, StyleSheet, TouchableOpacity, ImageBackground } from 'react-native';
 import Sound from 'react-native-sound';
 import BackgroundImage from '../resources/background.jpg';
@@ -8,21 +8,24 @@ const sounds = {
   guitar1: new Sound(require('../assets/sounds/guitar1.mp3'), Sound.MAIN_BUNDLE),
 };
 
-
 const GuitarScreen: React.FC = () => {
   const [currentSound, setCurrentSound] = useState<Sound | null>(null);
+
+  // Function to stop the current sound
   const stopSound = () => {
     if (currentSound) {
       currentSound.stop(() => setCurrentSound(null));
       console.log('Sound stopped');
     }
   };
+
+  // Function to play a new sound
   const playSound = (sound: Sound) => {
     // Stop the current sound if already playing
     if (currentSound) {
       currentSound.stop(() => setCurrentSound(null));
     }
-    
+
     sound.play(success => {
       if (success) {
         console.log('Sound played successfully');
@@ -34,6 +37,17 @@ const GuitarScreen: React.FC = () => {
 
     setCurrentSound(sound); // Keep track of the current sound
   };
+
+  // useEffect to handle cleanup when the component is unmounted
+  useEffect(() => {
+    // Cleanup function to stop and release the sound when navigating away
+    return () => {
+      if (currentSound) {
+        currentSound.stop(() => setCurrentSound(null));
+        console.log('Sound stopped and cleaned up on unmount');
+      }
+    };
+  }, [currentSound]);
 
   return (
     <View style={styles.container}>
