@@ -5,13 +5,42 @@ import { RootStackParamList } from '../AppNavigator';
 import authorInfo from '../tables/AuthorInfo';
 import AuthorCard from '../components/AuthorCard';
 import BackgroundImage from '../resources/background.jpg'; // Import your background image
+import axios, { AxiosResponse } from 'axios';
 
 type AuthorScreenProps = NativeStackScreenProps<RootStackParamList, 'Author'>;
+
+interface Payload {
+  message: string;
+  timestamp: number;
+}
+
+interface ServerResponse {
+  status: string;
+  [key: string]: any; // Allow additional optional fields
+}
+
+const sendData = async (): Promise<void> => {
+  const data: Payload = {
+    message: 'Hello from React Native!',
+    timestamp: Date.now(),
+  };
+
+  try {
+    const response: AxiosResponse<ServerResponse> = await axios.post(
+      'https://a7b3-91-159-46-121.ngrok-free.app/receive-data',
+      data
+    );
+    console.log('Response:', response.data);
+  } catch (error) {
+    console.error('Error sending data:', (error as Error).message);
+  }
+};
 
 const AuthorScreen: React.FC<AuthorScreenProps> = () => {
   const handlePress = async () => {
     const url = authorInfo.linkedInUrl;
     try {
+      // use sendData(); to request server.
       await Linking.openURL(url);
     } catch (error) {
       console.error('Failed to open URL:', error);
