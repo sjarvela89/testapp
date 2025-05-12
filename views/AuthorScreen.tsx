@@ -24,34 +24,12 @@ interface ServerResponse {
   [key: string]: any; // Allow additional optional fields
 }
 
-const sendData = async (): Promise<void> => {
-  const id = await DeviceInfo.getAndroidId();
-  const data: Login = {
-    username: 'admin',
-    password: 'password',
-    deviceId: id,
-  };
-
-  try {
-
-    const response: AxiosResponse<ServerResponse> = await axios.post(
-      'https://317b-91-159-46-121.ngrok-free.app/login',
-      data
-    );
-    console.log('Response:', response.data);
-  } catch (error) {
-    console.error('Error sending data:', (error as Error).message);
-    console.error('RESPONSE WAS: ',error.response?.data)
-  }
-};
 
 const AuthorScreen: React.FC<AuthorScreenProps> = () => {
   const handlePress = async () => {
     const url = authorInfo.linkedInUrl;
     try {
-      sendData();
-      // use sendData(); to request server.
-      //await Linking.openURL(url);
+      await Linking.openURL(url);
     } catch (error) {
       console.error('Failed to open URL:', error);
     }
