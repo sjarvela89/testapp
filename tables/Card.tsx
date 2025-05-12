@@ -37,6 +37,12 @@ const cardData: CardData[] = [
     imageSource: GuitarImage,
     screen: "Guitar",
   },
+  {
+    title: "Login",
+    subtitle: "Messaging with private server",
+    imageSource: ProfileImage,
+    screen: "Login",
+  }
 ];
 
 export default cardData;

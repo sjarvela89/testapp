@@ -6,12 +6,17 @@ import authorInfo from '../tables/AuthorInfo';
 import AuthorCard from '../components/AuthorCard';
 import BackgroundImage from '../resources/background.jpg'; // Import your background image
 import axios, { AxiosResponse } from 'axios';
+import DeviceInfo from 'react-native-device-info';
+
+
+
 
 type AuthorScreenProps = NativeStackScreenProps<RootStackParamList, 'Author'>;
 
-interface Payload {
-  message: string;
-  timestamp: number;
+interface Login {
+  username: string;
+  password: string;
+  deviceId: string;
 }
 
 interface ServerResponse {
@@ -20,19 +25,23 @@ interface ServerResponse {
 }
 
 const sendData = async (): Promise<void> => {
-  const data: Payload = {
-    message: 'Hello from React Native!',
-    timestamp: Date.now(),
+  const id = await DeviceInfo.getAndroidId();
+  const data: Login = {
+    username: 'admin',
+    password: 'password',
+    deviceId: id,
   };
 
   try {
+
     const response: AxiosResponse<ServerResponse> = await axios.post(
-      'https://a7b3-91-159-46-121.ngrok-free.app/receive-data',
+      'https://317b-91-159-46-121.ngrok-free.app/login',
       data
     );
     console.log('Response:', response.data);
   } catch (error) {
     console.error('Error sending data:', (error as Error).message);
+    console.error('RESPONSE WAS: ',error.response?.data)
   }
 };
 
@@ -40,8 +49,9 @@ const AuthorScreen: React.FC<AuthorScreenProps> = () => {
   const handlePress = async () => {
     const url = authorInfo.linkedInUrl;
     try {
+      sendData();
       // use sendData(); to request server.
-      await Linking.openURL(url);
+      //await Linking.openURL(url);
     } catch (error) {
       console.error('Failed to open URL:', error);
     }

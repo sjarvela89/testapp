@@ -7,6 +7,9 @@ import PhotographyScreen from './views/PhotographyScreen';
 import { SafeAreaView, StatusBar } from 'react-native';
 import AuthorScreen from './views/AuthorScreen';
 import GuitarScreen from './views/GuitarScreen';
+import LoginScreen from './views/LoginScreen';
+import RegisterScreen from './views/RegisterScreen';
+import MessagesToServerScreen from './views/MessagesToServerScreen';
 
 export type RootStackParamList = {
     Home: undefined;
@@ -14,6 +17,9 @@ export type RootStackParamList = {
     Dog: { name: string };
     Photography: { name: string };
     Guitar:  {name: string };
+    Login: {name: string};
+    Register: {name: string};
+    MessagesToServer: {name: string};
   };
 
 const Stack = createNativeStackNavigator<RootStackParamList>();
@@ -29,6 +35,9 @@ const AppNavigator = () => {
                 <Stack.Screen name="Dog" component={DogScreen} options={{headerShown: false}}/>
                 <Stack.Screen name="Photography" component={PhotographyScreen} options={{headerShown: false}}/>
                 <Stack.Screen name="Guitar" component={GuitarScreen} options={{headerShown: false}}/>
+                <Stack.Screen name="Login" component={LoginScreen} options={{headerShown: false}}/>
+                <Stack.Screen name="Register" component={RegisterScreen} options={{headerShown: false}}/>
+                <Stack.Screen name="MessagesToServer" component={MessagesToServerScreen} options={{headerShown: false}}/>
             </Stack.Navigator>
         </NavigationContainer>
     </SafeAreaView>
