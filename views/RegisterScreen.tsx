@@ -14,6 +14,7 @@ import { RootStackParamList } from '../AppNavigator';
 import BackgroundImage from '../resources/background.jpg';
 import axios from 'axios';
 import DeviceInfo from 'react-native-device-info';
+import { config } from '@/components/config/config';
 
 type RegisterScreenProps = NativeStackScreenProps<RootStackParamList, 'Register'>;
 
@@ -43,7 +44,7 @@ const RegisterScreen: React.FC<RegisterScreenProps> = ({ navigation }) => {
 
     try {
       const response = await axios.post(
-        'https://317b-91-159-46-121.ngrok-free.app/register',
+        config.serverAddress+'register',
         payload
       );
 

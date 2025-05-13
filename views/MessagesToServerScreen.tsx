@@ -17,6 +17,7 @@ import BackgroundImage from '../resources/background.jpg';
 import axios from 'axios';
 import DeviceInfo from 'react-native-device-info';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import { config } from '@/components/config/config';
 
 type MessagesToServerScreenProps = NativeStackScreenProps<RootStackParamList, 'MessagesToServer'>;
 
@@ -48,10 +49,10 @@ const MessagesToServerScreen: React.FC<MessagesToServerScreenProps> = () => {
 
   const fetchMessages = async (id: string) => {
   try {
-    const token = await AsyncStorage.getItem('authToken');
+    const token = await AsyncStorage.getItem('authToken')
     const username = await AsyncStorage.getItem('username') ?? '';
     const response = await axios.get(
-      `https://317b-91-159-46-121.ngrok-free.app/messages/${username}`,
+      config.serverAddress+`messages/${username}`,
       {
         headers: {
           Authorization: token ? `Bearer ${token}` : '',
@@ -85,7 +86,7 @@ const MessagesToServerScreen: React.FC<MessagesToServerScreenProps> = () => {
       const payload: MessagePayload = { ciphertext, username, toUser };
 
       const response = await axios.post(
-        'https://317b-91-159-46-121.ngrok-free.app/messages',
+        config.serverAddress+'messages',
         payload,
         {
           headers: {

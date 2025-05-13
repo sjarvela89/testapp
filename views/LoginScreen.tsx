@@ -16,6 +16,7 @@ import BackgroundImage from '../resources/background.jpg';
 import axios, { AxiosResponse } from 'axios';
 import DeviceInfo from 'react-native-device-info';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import { config } from '@/components/config/config';
 
 type LoginScreenProps = NativeStackScreenProps<RootStackParamList, 'Login'>;
 
@@ -45,7 +46,7 @@ const LoginScreen: React.FC<LoginScreenProps> = ({ navigation }) => {
 
     try {
       const response: AxiosResponse<ServerResponse> = await axios.post(
-        'https://317b-91-159-46-121.ngrok-free.app/login',
+        config.serverAddress+'login',
         data
       );
 
