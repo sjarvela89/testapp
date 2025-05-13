@@ -56,7 +56,7 @@ const LoginScreen: React.FC<LoginScreenProps> = ({ navigation }) => {
         await AsyncStorage.setItem('username', username);
         console.log('USERNAME WAS: ', username);
         Alert.alert('Login Success', 'Token saved!');
-        navigation.navigate('MessagesToServer');
+        navigation.navigate('MessagesToServer', {name: 'MessagesToServer'});
       } else {
         Alert.alert('Login Failed', 'No token received.');
       }
@@ -91,7 +91,7 @@ const LoginScreen: React.FC<LoginScreenProps> = ({ navigation }) => {
           />
           <Button title="Login" onPress={sendData} />
 
-          <TouchableOpacity onPress={() => navigation.navigate('Register')}>
+          <TouchableOpacity onPress={() => navigation.navigate('Register', {name: 'Register'})}>
             <Text style={styles.registerLink}>Don’t have an account? Register</Text>
           </TouchableOpacity>
         </View>
