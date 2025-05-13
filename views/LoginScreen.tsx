@@ -64,7 +64,7 @@ const LoginScreen: React.FC<LoginScreenProps> = ({ navigation }) => {
     } catch (error: any) {
       console.error('Login failed:', error.message);
       console.error('RESPONSE WAS:', error.response?.data);
-      Alert.alert('Login Error', error.response?.data?.message || 'Unknown error');
+      Alert.alert('Login Error', error.response?.data?.message || 'Server might be offline');
     }
   };
 
