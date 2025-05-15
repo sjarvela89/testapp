@@ -33,7 +33,7 @@ interface StoredMessage {
   timestamp: string;
 }
 
-const MessagesToServerScreen: React.FC<MessagesToServerScreenProps> = () => {
+const MessagesToServerScreen: React.FC<MessagesToServerScreenProps> = ({navigation}) => {
   const [message, setMessage] = useState('');
   const [messages, setMessages] = useState<StoredMessage[]>([]);
   const [deviceId, setDeviceId] = useState('');
@@ -72,6 +72,9 @@ const MessagesToServerScreen: React.FC<MessagesToServerScreenProps> = () => {
     Alert.alert('Error', 'Could not load previous messages');
   }
 };
+const handleColorSelector = async () => {
+    navigation.navigate('ColorPickerScreen', {name: 'ColorPickerScreen'});
+}
   const handleSendMessage = async () => {
     if (!message.trim()) {
       Alert.alert('Validation Error', 'Message cannot be empty.');
@@ -145,6 +148,7 @@ const MessagesToServerScreen: React.FC<MessagesToServerScreenProps> = () => {
                 <Text style={styles.emptyMessage}>No messages yet.</Text>
             }
         />
+        <Button title="Color Selector" onPress={handleColorSelector} />
         </View>
       </KeyboardAvoidingView>
     </ImageBackground>

@@ -10,6 +10,7 @@ import GuitarScreen from './views/GuitarScreen';
 import LoginScreen from './views/LoginScreen';
 import RegisterScreen from './views/RegisterScreen';
 import MessagesToServerScreen from './views/MessagesToServerScreen';
+import ColorPickerScreen from './views/ColorPickerScreen';
 
 export type RootStackParamList = {
     Home: undefined;
@@ -20,6 +21,7 @@ export type RootStackParamList = {
     Login: {name: string};
     Register: {name: string};
     MessagesToServer: {name: string};
+    ColorPickerScreen: {name: string};
   };
 
 const Stack = createNativeStackNavigator<RootStackParamList>();
@@ -38,6 +40,7 @@ const AppNavigator = () => {
                 <Stack.Screen name="Login" component={LoginScreen} options={{headerShown: false}}/>
                 <Stack.Screen name="Register" component={RegisterScreen} options={{headerShown: false}}/>
                 <Stack.Screen name="MessagesToServer" component={MessagesToServerScreen} options={{headerShown: false}}/>
+                <Stack.Screen name="ColorPickerScreen" component={ColorPickerScreen} options={{headerShown: false}}/>
             </Stack.Navigator>
         </NavigationContainer>
     </SafeAreaView>
