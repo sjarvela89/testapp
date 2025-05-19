@@ -10,10 +10,8 @@ import {
   Alert,
 } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
-import convert from 'color-convert';
-import BackgroundImage from '../resources/background.jpg';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import axios from 'axios';
+import BackgroundImage from '../resources/background.jpg';
 import { config } from '@/components/config/config';
 
 const { width } = Dimensions.get('window');
@@ -59,61 +57,53 @@ const GradientSlider = ({
           style={styles.gradient}
         />
         <View
-          style={[
-            styles.thumb,
-            { left: (value / max) * SLIDER_WIDTH - 10 },
-          ]}
+          style={[styles.thumb, { left: (value / max) * SLIDER_WIDTH - 10 }]}
         />
       </View>
     </View>
   );
 };
 
-const ColorPickerScreen = ({ navigation }: any) => {
-  const [hue, setHue] = useState(195);
-  const [saturation, setSaturation] = useState(100);
-  const [brightness, setBrightness] = useState(100);
+const HueGrinderScreen = ({ navigation }: any) => {
+  const [minHue, setMinHue] = useState(0);
+  const [maxHue, setMaxHue] = useState(360);
+  const [intervalMs, setIntervalMs] = useState(500);
+  const [step, setStep] = useState(10);
+  const [durationMs, setDurationMs] = useState(30000);
 
-  interface ColorPayload {
-  username: string;
-  hue: number;
-  saturation: number;
-  brightness: number;
-}
-
-  const handleSendColor = async () => {
+  const sendGrindRequest = async () => {
     try {
       const token = await AsyncStorage.getItem('authToken');
-      const username = await AsyncStorage.getItem('username') ?? '';
 
-      const payload: ColorPayload = {
-      username,
-      hue: Math.round(hue),
-      saturation: Math.round(saturation),
-      brightness: Math.round(brightness),
+      const payload = {
+        minHue: Math.round(minHue),
+        maxHue: Math.round(maxHue),
+        intervalMs: Math.round(intervalMs),
+        step: Math.round(step),
+        durationMs: Math.round(durationMs),
       };
 
-      const response = await axios.post(
-        config.serverAddress + 'colors',
-        payload,
-        {
-          headers: {
-            Authorization: token ? `Bearer ${token}` : '',
-          },
-        }
-      );
+      const response = await fetch(config.serverAddress + 'hue-grinder', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: token ? `Bearer ${token}` : '',
+        },
+        body: JSON.stringify(payload),
+      });
 
-      console.log('Color sent:', response.data);
-      Alert.alert('Success', 'Color sent.');
-    } catch (error: any) {
-      console.error('Send color error:', error.response?.data?.message);
-      Alert.alert('Error', 'Failed to send color.');
+      const json = await response.json();
+
+      if (response.ok) {
+        Alert.alert('Success', json.status || 'Hue grinder started.');
+      } else {
+        throw new Error(json.message || 'Server error');
+      }
+    } catch (err: any) {
+      console.error('Hue grinder error:', err);
+      Alert.alert('Error', err.message);
     }
-};
-
-  const rgb = convert.hsv.rgb([hue, saturation, brightness]);
-  const hex = convert.hsv.hex([hue, saturation, brightness]);
-  const colorPreview = `rgb(${rgb[0]}, ${rgb[1]}, ${rgb[2]})`;
+  };
 
   const hueGradient = Array.from({ length: 7 }, (_, i) =>
     `hsl(${i * 60}, 100%, 50%)`
@@ -123,38 +113,46 @@ const ColorPickerScreen = ({ navigation }: any) => {
     <ImageBackground source={BackgroundImage} style={styles.backgroundImage} resizeMode="cover">
       <View style={styles.overlay} />
       <View style={styles.container}>
-        <View style={[styles.colorPreview, { backgroundColor: colorPreview }]} />
-        <Text style={styles.hexText}>#{hex}</Text>
-
         <GradientSlider
-          label="Hue"
-          value={hue}
-          onChange={setHue}
+          label="Min Hue"
+          value={minHue}
+          onChange={setMinHue}
           gradientColors={hueGradient}
           max={360}
         />
-
         <GradientSlider
-          label="Saturation"
-          value={saturation}
-          onChange={setSaturation}
-          gradientColors={['#888', `hsl(${hue}, 100%, 50%)`]}
+          label="Max Hue"
+          value={maxHue}
+          onChange={setMaxHue}
+          gradientColors={hueGradient}
+          max={360}
         />
-
         <GradientSlider
-          label="Brightness"
-          value={brightness}
-          onChange={setBrightness}
-          gradientColors={['#000', `hsl(${hue}, ${saturation}%, 50%)`]}
+          label="Interval (ms)"
+          value={intervalMs}
+          onChange={setIntervalMs}
+          gradientColors={['#444', '#ccc']}
+          max={2000}
+        />
+        <GradientSlider
+          label="Step"
+          value={step}
+          onChange={setStep}
+          gradientColors={['#111', '#999']}
+          max={100}
+        />
+        <GradientSlider
+          label="Duration (ms)"
+          value={durationMs}
+          onChange={setDurationMs}
+          gradientColors={['#333', '#eee']}
+          max={600000}
         />
         <View style={styles.buttonContainer}>
-          <Button title="Change color" onPress={handleSendColor} />
+          <Button title="Start Hue Grinder" onPress={sendGrindRequest} />
         </View>
         <View style={styles.buttonContainer}>
           <Button title="Back to Messages" onPress={() => navigation.goBack()} />
-        </View>
-        <View style={styles.buttonContainer}>
-          <Button title="Open Hue Grinder" onPress={() => navigation.navigate('HueGrinder', {name: 'HueGrinder'})} />
         </View>
       </View>
     </ImageBackground>
@@ -173,17 +171,6 @@ const styles = StyleSheet.create({
     flex: 1,
     padding: 20,
     justifyContent: 'center',
-  },
-  colorPreview: {
-    height: 150,
-    borderRadius: 12,
-    marginBottom: 16,
-  },
-  hexText: {
-    color: '#fff',
-    fontSize: 18,
-    textAlign: 'center',
-    marginBottom: 32,
   },
   sliderContainer: {
     marginBottom: 24,
@@ -218,4 +205,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default ColorPickerScreen;
+export default HueGrinderScreen;
