@@ -106,7 +106,7 @@ const ColorPickerScreen = ({ navigation }: any) => {
       console.log('Color sent:', response.data);
       Alert.alert('Success', 'Color sent.');
     } catch (error: any) {
-      console.error('Send color error:', error.message);
+      console.error('Send color error:', error.response?.data?.message);
       Alert.alert('Error', 'Failed to send color.');
     }
 };

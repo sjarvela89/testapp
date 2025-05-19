@@ -52,7 +52,7 @@ const RegisterScreen: React.FC<RegisterScreenProps> = ({ navigation }) => {
       Alert.alert('Success', 'Account created. You can now log in.');
       navigation.navigate('Login', {name: 'Login'});
     } catch (error: any) {
-      console.error('Registration error:', error.message);
+      console.error('Registration error:', error.response?.data?.message);
       console.error('RESPONSE WAS:', error.response?.data);
       Alert.alert('Registration Failed', error.response?.data?.message || 'Unknown error');
     }

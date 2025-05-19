@@ -62,7 +62,7 @@ const LoginScreen: React.FC<LoginScreenProps> = ({ navigation }) => {
         Alert.alert('Login Failed', 'No token received.');
       }
     } catch (error: any) {
-      console.error('Login failed:', error.message);
+      console.error('Login failed:', error.response?.data?.message);
       console.error('RESPONSE WAS:', error.response?.data);
       Alert.alert('Login Error', error.response?.data?.message || 'Server might be offline');
     }

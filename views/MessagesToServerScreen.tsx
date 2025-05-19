@@ -68,7 +68,7 @@ const MessagesToServerScreen: React.FC<MessagesToServerScreenProps> = ({navigati
 
     setMessages(mapped);
   } catch (error: any) {
-    console.error('Fetch messages failed:', error.message);
+    console.error('Fetch messages failed:', error.response?.data?.message);
     Alert.alert('Error', 'Could not load previous messages');
   }
 };
