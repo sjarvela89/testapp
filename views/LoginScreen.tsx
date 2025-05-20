@@ -35,38 +35,46 @@ interface ServerResponse {
 const LoginScreen: React.FC<LoginScreenProps> = ({ navigation }) => {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
+  const [loading, setLoading] = useState(false);
 
-  const sendData = async () => {
+
+const sendData = async () => {
+  if (loading) return;
+
+  setLoading(true);
+
+  try {
     const deviceId = await DeviceInfo.getAndroidId();
-    const data: Login = {
-      username,
-      password,
-      deviceId,
-    };
+    const data: Login = { username, password, deviceId };
 
-    try {
-      const response: AxiosResponse<ServerResponse> = await axios.post(
-        config.serverAddress+'login',
-        data
-      );
+    const response: AxiosResponse<ServerResponse> = await axios.post(
+      config.serverAddress + 'login',
+      data
+    );
 
-      const { token } = response.data;
+    console.log('Login response:', response.data);
 
-      if (token) {
-        await AsyncStorage.setItem('authToken', token);
-        await AsyncStorage.setItem('username', username);
-        console.log('USERNAME WAS: ', username);
-        Alert.alert('Login Success', 'Token saved!');
-        navigation.navigate('MessagesToServer', {name: 'MessagesToServer'});
-      } else {
-        Alert.alert('Login Failed', 'No token received.');
-      }
-    } catch (error: any) {
-      console.error('Login failed:', error.response?.data?.message);
-      console.error('RESPONSE WAS:', error.response?.data);
-      Alert.alert('Login Error', error.response?.data?.message || 'Server might be offline');
+    const { token } = response.data;
+
+    if (token) {
+      await AsyncStorage.setItem('authToken', token);
+      await AsyncStorage.setItem('username', username);
+      Alert.alert('Login Success', 'Token saved!');
+      navigation.navigate('MessagesToServer', { name: 'MessagesToServer' });
+    } else {
+      Alert.alert('Login Failed', 'No token received.');
     }
-  };
+  } catch (error: any) {
+    if (!error.response) {
+      Alert.alert('Network Error', 'Cannot reach server. Please check your internet connection.');
+    } else {
+      Alert.alert('Login Error', error.response.data.message || 'Unknown error');
+    }
+    console.error('Login failed:', error);
+  } finally {
+    setLoading(false);
+  }
+};
 
   return (
     <ImageBackground source={BackgroundImage} style={styles.backgroundImage} resizeMode="cover">

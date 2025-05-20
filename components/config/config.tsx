@@ -1,3 +1,4 @@
+import Constants from 'expo-constants';
 export const config = {
-    serverAddress: 'https://4fc5-91-159-46-121.ngrok-free.app/'
+    serverAddress: Constants.expoConfig?.extra?.API_URL || 'http://localhost:3000'
 }
