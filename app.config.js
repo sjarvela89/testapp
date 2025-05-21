@@ -20,6 +20,7 @@ export default {
     },
     android: {
       adaptiveIcon: {
+        permissions: ["INTERNET"],
         foregroundImage: './assets/images/adaptive-icon.png',
         backgroundColor: '#ffffff',
       },
