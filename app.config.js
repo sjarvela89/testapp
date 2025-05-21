@@ -1,0 +1,64 @@
+import 'dotenv/config';
+
+export default {
+  expo: {
+    name: 'testapp',
+    slug: 'testapp',
+    version: '1.0.0',
+    orientation: 'portrait',
+    icon: './assets/images/icon.png',
+    scheme: 'myapp',
+    userInterfaceStyle: 'automatic',
+    splash: {
+      image: './assets/images/splash.png',
+      resizeMode: 'contain',
+      backgroundColor: '#ffffff',
+    },
+    ios: {
+      supportsTablet: true,
+      bundleIdentifier: 'com.sjarvela89.testapp',
+    },
+    android: {
+      adaptiveIcon: {
+        foregroundImage: './assets/images/adaptive-icon.png',
+        backgroundColor: '#ffffff',
+      },
+      package: 'com.sjarvela89.testapp',
+    },
+    web: {
+      bundler: 'metro',
+      output: 'static',
+      favicon: './assets/images/favicon.png',
+    },
+    plugins: [
+      [
+        './plugins/network-security-config',
+        {
+          domain: process.env.API_URL,
+        },
+      ],
+      'expo-router',
+      'expo-secure-store',
+      [
+        'expo-build-properties',
+        {
+          android: {
+            usesCleartextTraffic: true,
+            permissions: ['android.permission.INTERNET'],
+          },
+        },
+      ],
+    ],
+    experiments: {
+      typedRoutes: true,
+    },
+    extra: {
+      router: {
+        origin: false,
+      },
+      eas: {
+        projectId: '76a5c1b8-1a9c-415d-9d5b-29be346b1b2a',
+      },
+    },
+  },
+};
