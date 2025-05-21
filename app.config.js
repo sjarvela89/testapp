@@ -34,7 +34,7 @@ export default {
       [
         './plugins/network-security-config',
         {
-          domain: process.env.API_URL,
+          domain: process.env.APP_DOMAIN,
         },
       ],
       'expo-router',
