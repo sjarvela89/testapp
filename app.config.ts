@@ -14,6 +14,12 @@ export default ({ config }: ConfigContext): ExpoConfig => ({
         },
       },
     ],
+    [
+        './plugins/network-security-config',
+        {
+          domain: process.env.APP_DOMAIN,
+        },
+    ]
   ],
   android: {
     ...config.android,
