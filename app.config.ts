@@ -15,7 +15,7 @@ export default ({ config }: ConfigContext): ExpoConfig => ({
       },
     ],
     [
-        './plugins/network-security-config',
+        './plugins/network-security-config.js',
         {
           domain: process.env.APP_DOMAIN,
         },
