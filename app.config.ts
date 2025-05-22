@@ -5,10 +5,21 @@ export default ({ config }: ConfigContext): ExpoConfig => ({
   slug: config.slug ?? 'testapp',
   owner: 'sjarvela89',
   version: config.version ?? '1.0.0',
+  plugins: [
+    [
+      'expo-build-properties',
+      {
+        android: {
+          usesCleartextTraffic: true,
+        },
+      },
+    ],
+  ],
   android: {
     ...config.android,
     permissions: ['INTERNET'],
     package: 'com.sjarvela89.testapp',
+    
   },
   sdkVersion: config.sdkVersion ?? '51.0.0', // adjust to match your SDK
   extra: {
