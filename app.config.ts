@@ -13,12 +13,6 @@ export default ({ config }: ConfigContext): ExpoConfig => ({
           usesCleartextTraffic: true,
         },
       },
-    ],
-    [
-        './plugins/network-security-config.js',
-        {
-          domain: process.env.APP_DOMAIN,
-        },
     ]
   ],
   android: {
