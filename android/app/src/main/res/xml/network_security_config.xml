@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <network-security-config>
   <domain-config cleartextTrafficPermitted="false">
-    <domain includeSubdomains="true">your-ip-or-domain</domain>
+    <domain includeSubdomains="true">localhost</domain>
     <trust-anchors>
       <certificates src="user" /> <!-- Trust user-added CAs -->
     </trust-anchors>
