@@ -11,6 +11,7 @@ export default ({ config }: ConfigContext): ExpoConfig => ({
       {
         android: {
           usesCleartextTraffic: false,
+          networkSecurityConfig: "@xml/network_security_config"
         },
       },
     ]
