@@ -10,7 +10,7 @@ export default ({ config }: ConfigContext): ExpoConfig => ({
       'expo-build-properties',
       {
         android: {
-          usesCleartextTraffic: false,
+          usesCleartextTraffic: true,
           networkSecurityConfig: "@xml/network_security_config"
         },
       },
