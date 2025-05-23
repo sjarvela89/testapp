@@ -13,10 +13,10 @@ import {
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import { RootStackParamList } from '../AppNavigator';
 import BackgroundImage from '../resources/background.jpg';
-import axios, { AxiosResponse } from 'axios';
 import DeviceInfo from 'react-native-device-info';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { config } from '@/components/config/config';
+import { fetch } from 'react-native-ssl-pinning';
 
 type LoginScreenProps = NativeStackScreenProps<RootStackParamList, 'Login'>;
 
@@ -37,44 +37,50 @@ const LoginScreen: React.FC<LoginScreenProps> = ({ navigation }) => {
   const [password, setPassword] = useState('');
   const [loading, setLoading] = useState(false);
 
+  const sendData = async () => {
+    if (loading) return;
 
-const sendData = async () => {
-  if (loading) return;
+    setLoading(true);
 
-  setLoading(true);
+    try {
+      const deviceId = await DeviceInfo.getAndroidId();
+      const data: Login = { username, password, deviceId };
 
-  try {
-    const deviceId = await DeviceInfo.getAndroidId();
-    const data: Login = { username, password, deviceId };
+      const response = await fetch(config.serverAddress + 'login', {
+        method: 'POST',
+        timeoutInterval: 10000,
+        headers: {
+          'Content-Type': 'application/json',
+          Accept: 'application/json',
+        },
+          body: JSON.stringify(data),
+          sslPinning: {
+          certs: ['cert'],
+        },
+      });
+      if (!response.bodyString) {
+        throw new Error('Empty response from server.');
+      }
+      const parsed: ServerResponse = JSON.parse(response.bodyString);
+      console.log('Login response:', parsed);
 
-    const response: AxiosResponse<ServerResponse> = await axios.post(
-      config.serverAddress + 'login',
-      data
-    );
+      const { token } = parsed;
 
-    console.log('Login response:', response.data);
-
-    const { token } = response.data;
-
-    if (token) {
-      await AsyncStorage.setItem('authToken', token);
-      await AsyncStorage.setItem('username', username);
-      Alert.alert('Login Success', 'Token saved!');
-      navigation.navigate('MessagesToServer', { name: 'MessagesToServer' });
-    } else {
-      Alert.alert('Login Failed', 'No token received.');
+      if (token) {
+        await AsyncStorage.setItem('authToken', token);
+        await AsyncStorage.setItem('username', username);
+        Alert.alert('Login Success', 'Token saved!');
+        navigation.navigate('MessagesToServer', { name: 'MessagesToServer' });
+      } else {
+        Alert.alert('Login Failed', 'No token received.');
+      }
+    } catch (error: any) {
+      console.error('Login failed:', error);
+      Alert.alert('Network Error', 'Cannot reach server. Please check your connection or certificate.');
+    } finally {
+      setLoading(false);
     }
-  } catch (error: any) {
-    if (!error.response) {
-      Alert.alert('Network Error', 'Cannot reach server. Please check your internet connection.');
-    } else {
-      Alert.alert('Login Error', error.response.data.message || 'Unknown error');
-    }
-    console.error('Login failed:', error);
-  } finally {
-    setLoading(false);
-  }
-};
+  };
 
   return (
     <ImageBackground source={BackgroundImage} style={styles.backgroundImage} resizeMode="cover">
@@ -99,8 +105,7 @@ const sendData = async () => {
             secureTextEntry
           />
           <Button title="Login" onPress={sendData} />
-
-          <TouchableOpacity onPress={() => navigation.navigate('Register', {name: 'Register'})}>
+          <TouchableOpacity onPress={() => navigation.navigate('Register', { name: 'Register' })}>
             <Text style={styles.registerLink}>Don’t have an account? Register</Text>
           </TouchableOpacity>
         </View>
